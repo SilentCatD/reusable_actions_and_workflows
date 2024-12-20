@@ -16,6 +16,7 @@ jobs:
           files: |
             .github/**/*.yml
             actions/**/*.yml
+            !.github/**/dependabot.yml
 
       - uses: actions/cache/restore@v4
         if:  ${{ steps.changed-files.outputs.any_changed == 'true' }}
