@@ -1,0 +1,46 @@
+name: Template changed code analyze
+
+on:
+  workflow_call:
+    inputs:
+      working-dir:
+        type: string
+        description: "Working dir"
+        default: .
+
+jobs:
+  flutterAnalyzeOnChangedFiles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/*.dart
+          files_ignore: |
+            **/*.g.dart
+            **/*.mocks.dart
+            **/generated/**/*.dart
+
+      - name: Setup Flutter
+        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+        uses: SilentCatD/reusable_actions_and_workflows/actions/setup_flutter_action@main
+
+      - name: Get dependencies
+        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+        run: flutter pub get
+        working-directory: ${{ inputs.working-dir }}
+
+      - name: Analyze changed files
+        run: flutter analyze --no-fatal-infos --write=flutter_analyze.log ${{ steps.changed-files.outputs.all_changed_files }}
+        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+
+      - name: Upload Artifact
+        if: ${{ !cancelled() &&  steps.changed-files.outputs.any_changed == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter_analyze.log
+          path: ./flutter_analyze.log

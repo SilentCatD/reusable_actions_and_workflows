@@ -1,0 +1,42 @@
+name: Template changed actions analyze
+
+on:
+  workflow_call:
+
+jobs:
+  yamlAnalyzeOnChangedActions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            .github/**/*.yml
+            actions/**/*.yml
+
+      - uses: actions/cache/restore@v4
+        if:  ${{ steps.changed-files.outputs.any_changed == 'true' }}
+        id: cache-restore
+        with:
+          path: actionlint
+          key: ${{ runner.os }}-actionlintscripts
+
+      - name: Download actionlint
+        if:  ${{ (steps.changed-files.outputs.any_changed == 'true') && (steps.cache-restore.outputs.cache-hit != 'true') }}
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
+      - uses: actions/cache/save@v4
+        if:  ${{ (steps.changed-files.outputs.any_changed == 'true') && (steps.cache-restore.outputs.cache-hit != 'true') }}
+        id: cache-save
+        with:
+          path: actionlint
+          key: ${{ runner.os }}-actionlintscripts
+
+      - name: Check workflow files
+        if:  ${{ steps.changed-files.outputs.any_changed == 'true' }}
+        run: |
+          ./actionlint -color ${{ steps.changed-files.outputs.all_changed_files }}

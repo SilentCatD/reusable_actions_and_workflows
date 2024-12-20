@@ -1,0 +1,44 @@
+name: Template flutter test
+
+on:
+  workflow_call:
+    inputs:
+      should-upload-artifact:
+        type: boolean
+        default: true
+        description: "Should perform uploading artifact or not"
+      should-setup-github-auth:
+        type: boolean
+        default: false
+        description: "Should Setup github auth and replace pubspec"
+      working-dir:
+        type: string
+        description: "Working dir"
+        default: .
+
+jobs:
+  flutterTest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: SilentCatD/reusable_actions_and_workflows/actions/setup_flutter_action@main
+
+      - name: Get dependencies
+        run: |
+          flutter clean
+          flutter pub get
+        working-directory: ${{ inputs.working-dir }}
+
+      - name: Run Flutter Test
+        working-directory: ${{ inputs.working-dir }}
+        run: flutter test --coverage
+  
+      - name: Upload Artifact
+        if: ${{ inputs.should-upload-artifact }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lcov.info
+          path: coverage/lcov.info
+  

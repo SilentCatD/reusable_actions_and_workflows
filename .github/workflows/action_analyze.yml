@@ -1,0 +1,20 @@
+name: Analyze github action changes
+
+on:
+    workflow_dispatch:
+    pull_request:
+      types:
+        - opened
+        - synchronize
+        - reopened
+        - labeled
+        - unlabeled
+      paths:
+        - .github/**/*.yml
+        - actions/**/*.yml
+  
+
+jobs:
+  yamlAnalyzeOnChangedActions:
+    uses: ./.github/workflows/template_analyze_action.yml
+
