@@ -37,6 +37,21 @@ jobs:
           flutter pub get
         working-directory: ${{ inputs.working-dir }}
 
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/*.dart
+          files_ignore: |
+            **/*.g.dart
+            **/*.mocks.dart
+            **/generated/**/*.dart
+
+      - name: Analyze changed files
+        run: flutter analyze --no-fatal-infos --write=flutter_analyze.log ${{ steps.changed-files.outputs.all_changed_files }}
+        if: ${{ steps.changed-files.outputs.any_changed == 'true' }}
+
       - name: Run Flutter Test
         working-directory: ${{ inputs.working-dir }}
         run: flutter test --coverage
