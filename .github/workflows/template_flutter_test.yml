@@ -67,4 +67,4 @@ jobs:
         if: ${{ inputs.should-call-code-cov }}
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.code-cov-token }}
+          token: ${{ secrets.code_cov_token }}
