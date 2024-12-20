@@ -20,7 +20,7 @@ on:
         default: true
         description: "Should perform uploading coverage test to codecov"
     secrets:
-      code-cov-token:
+      code_cov_token:
 
 jobs:
   flutterTest:
