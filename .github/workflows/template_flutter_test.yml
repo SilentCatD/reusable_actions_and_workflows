@@ -15,6 +15,10 @@ on:
         type: string
         description: "Working dir"
         default: .
+      code-cov-token:
+        type: string
+        description: "code cov token"
+        default: ''
 
 jobs:
   flutterTest:
@@ -42,3 +46,8 @@ jobs:
           name: lcov.info
           path: coverage/lcov.info
   
+      - name: Upload coverage reports to Codecov
+        if: ${{ inputs.code-cov-token != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ inputs.code-cov-token }}
