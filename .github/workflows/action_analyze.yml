@@ -12,6 +12,7 @@ on:
         - unlabeled
       paths:
         - .github/**/*.yml
+        - '!.github/**/dependabot.yml'
         - actions/**/*.yml
   
 
