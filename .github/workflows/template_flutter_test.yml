@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Flutter
-        uses: SilentCatD/reusable_actions_and_workflows/actions/setup_flutter_action@main
+        uses: SilentCatD/reusable_actions_and_workflows/.github/actions/setup_flutter_action@main
 
       - name: Get dependencies
         run: |

@@ -29,4 +29,4 @@ jobs:
 
       - name: Check workflow files
         run: |
-          ./actionlint -color .github/.workflows .github/.actions actions
+          ./actionlint -color .github/workflows .github/actions
