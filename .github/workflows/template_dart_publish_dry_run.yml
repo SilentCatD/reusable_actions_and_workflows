@@ -1,11 +1,10 @@
-# .github/workflows/publish.yml
 name: Template publish to pub.dev dry run
 
 on:
   workflow_call:
 
 jobs:
-  publish:
+  dry-publish:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
