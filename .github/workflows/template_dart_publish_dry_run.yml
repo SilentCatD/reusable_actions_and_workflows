@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
+
+      - name: Setup Flutter
+        uses: SilentCatD/reusable_actions_and_workflows/actions/setup_flutter_action@main
+
       - name: Install dependencies
         run: dart pub get
-      - name: Publish
+
+      - name: Publish dry run
         run: dart pub publish --dry-run
